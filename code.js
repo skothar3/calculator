@@ -25,7 +25,6 @@ regEndsWithEquals = /=$/;
 regContainsDecimal = /\./;
 
 
-
 // Add event listeners for keyboard functionality
 // Listen for keydown and, if key matches a grid-item key then trigger action
 document.addEventListener(`keydown`,(e) => {
