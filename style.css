@@ -62,7 +62,6 @@ div#keypad {
     border-radius: 6px;
 
     display: grid;
-    /* grid-template-columns: auto auto auto; */
     grid-template-columns: repeat(4,1fr);
     grid-template-rows: repeat(6,1fr);
     gap: 2%;
@@ -81,45 +80,33 @@ button.grid-item:hover {
     background-color: whitesmoke;
     box-shadow: 0 0 0.4em #ffc600;;
 }
-button.grid-item.activated {
+button.grid-item.activated,button.grid-item:active {
     background-color: darkgray;
     box-shadow: 0 0 0.4em #ffc600;;
 }
-button#Clear {
+button[value="Clear"] {
     grid-column-start: 1;
     grid-column-end: 3;
     background-color: rgb(247, 172, 172);
 }
-button#Clear:hover {
-    background-color:whitesmoke;
-}
-button#Clear.activated {
-    background-color: darkgray;
-    box-shadow: 0 0 0.4em #ffc600;;
-}
-button#Delete {
+
+button[value="Delete"] {
     grid-column-start: 3;
     grid-column-end: 5;
     background-color: rgb(249, 249, 178);
 }
-button#Delete:hover {
-    background-color: whitesmoke;
-}
-button#Delete.activated {
-    background-color: darkgray;
-    box-shadow: 0 0 0.4em #ffc600;;
-}
-button#\= {
+
+button.grid-item[value="="] {
     background-color: rgb(203, 246, 203);
 }
-button#\=:hover {
+button.grid-item[value="="]:hover {
     background-color: whitesmoke;
+    box-shadow: 0 0 0.4em #ffc600;;
 }
-button#\=.activated {
+button.grid-item[value="="].activated,button.grid-item[value="="]:active {
     background-color: darkgray;
     box-shadow: 0 0 0.4em #ffc600;;
 }
-
 /* Footer */
 footer {
     display: flex;

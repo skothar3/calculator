@@ -14,16 +14,14 @@ let lastBtn;
 
 // Regex expressions for boolean tests in updateDisplay(). These incorporate expressions for either decimal or exponential notation.
 regZero = /^-?0$/;
-regTwoDigitsOrOneDecimal = /^((?!.*e)-?\d{2,})|((?!.*e)-?\d{1,}\.(\d{1,})?)|(-?\d{1}\.?(\d{1,})?e[\+-]\d{1,})$/;
-regOneDigit = /^((?!.*e)-?\d{1,}\.?(\d{1,})?)|(-?\d{1}\.?(\d{1,})?e[\+-]\d{1,})$/;
-regOneDigitAndOperator = /^(((?!.*e)-?\d{1,}\.?(\d{1,})?)|(-?\d{1}\.?(\d{1,})?e[\+-]\d{1,}))\s[+-x/\^]$/;
-regFullExpression = /^(((?!.*e)-?\d{1,}\.?(\d{1,})?)|(-?\d{1}\.?(\d{1,})?e[\+-]\d{1,}))\s[+-x/\^]\s(((?!.*e)-?\d{1,}\.?(\d{1,})?)|(-?\d{1}\.?(\d{1,})?e[\+-]\d{1,}))\s=$/;
+regMinTwoDigitsOrOneDecimal = /^((?!.*e)-?\d{2,})|((?!.*e)-?\d{1,}\.(\d{1,})?)|(-?\d{1}\.?(\d{1,})?e[\+-]\d{1,})$/;
+regMinOneDigit = /^((?!.*e)-?\d{1,}\.?(\d{1,})?)|(-?\d{1}\.?(\d{1,})?e[\+-]\d{1,})$/;
+regMinOneDigitAndOperator = /^(((?!.*e)-?\d{1,}\.?(\d{1,})?)|(-?\d{1}\.?(\d{1,})?e[\+-]\d{1,}))\s[+-x/\^]$/;
 regStartsWithOneDigit = /^((?!.*e)-?\d{1,}\.?(\d{1,})?)|(-?\d{1}\.?(\d{1,})?e[\+-]\d{1,})/;
 regStartsWithNegative = /^\-/;
 regEndsWithOperator = /[+-x/\^]$/;
 regEndsWithEquals = /=$/;
 regContainsDecimal = /\./;
-
 
 // Add event listeners for keyboard functionality
 // Listen for keydown and, if key matches a grid-item key then trigger action
@@ -40,23 +38,9 @@ document.addEventListener(`keyup`,(e) => {
     keyMatch.classList.remove('activated');
 }); 
 
-// Generate footer
-const foot = document.querySelector('footer');
-let cpyrt = document.createElement('p')
-cpyrt.textContent = `Copyright ${new Date().getFullYear()} skothar3`;
-let gitLink = document.createElement('a')
-let gitIcon = document.createElement('i')
-gitLink.href = `https://github.com/skothar3`;
-gitLink.target = '_blank';
-gitIcon.classList.add(`fa-brands`, `fa-square-github`,`fa-lg`);
-
-foot.appendChild(cpyrt);
-foot.appendChild(gitLink)
-gitLink.appendChild(gitIcon);
-
 function updateDisplay(btnTarget) {
     // First, address the current length of the Screen number. If it is already more than 8 characters long (including a minus sign or a decimal) and the user tries to add more characters then do nothing
-    if(regOneDigit.test(screenDisplay.textContent) && screenDisplay.textContent.length > 7 && !btnTarget.className.includes(`operator`) && !(btnTarget.className.includes(`special`) && (btnTarget.value == `=` || btnTarget.value == `Clear` || btnTarget.value == `Delete`))) {
+    if(regMinOneDigit.test(screenDisplay.textContent) && screenDisplay.textContent.length > 7 && !btnTarget.className.includes(`operator`) && !((btnTarget.value == `=` || btnTarget.value == `Clear` || btnTarget.value == `Delete`))) {
         alert('Maximum digit count reached!');
         return;
     };
@@ -75,7 +59,7 @@ function updateDisplay(btnTarget) {
         return;
     } else if(btnTarget.value == `Delete`) {
         if(regZero.test(screenDisplay.textContent)) return;
-        else if(regTwoDigitsOrOneDecimal.test(screenDisplay.textContent)) {
+        else if(regMinTwoDigitsOrOneDecimal.test(screenDisplay.textContent)) {
             screenDisplay.textContent = screenDisplay.textContent.slice(0,-1);
         } else {
             screenDisplay.textContent = `0`;
@@ -111,7 +95,7 @@ function updateDisplay(btnTarget) {
     // 2. History is `` and Screen is `/\d/`
     // If a digit key is pressed => Case 2
     // If a operator key is pressed => Case 3
-    else if(!historyDisplay.textContent && regOneDigit.test(screenDisplay.textContent)) {
+    else if(!historyDisplay.textContent && regMinOneDigit.test(screenDisplay.textContent)) {
         if(btnTarget.className.includes(`number`)) {
             screenDisplay.textContent += btnTarget.value;
         } else if(btnTarget.className.includes(`operator`)) {
@@ -140,7 +124,7 @@ function updateDisplay(btnTarget) {
     // 3. History is `/\d/` + `operator` and Screen is ``
     // If a digit key is pressed => Case 4
     // If a operator key is pressed => Case 3
-    else if(regOneDigitAndOperator.test(historyDisplay.textContent) && !screenDisplay.textContent) {
+    else if(regMinOneDigitAndOperator.test(historyDisplay.textContent) && !screenDisplay.textContent) {
         
         if(btnTarget.className.includes(`number`)) {
             screenDisplay.textContent = btnTarget.value;
@@ -159,7 +143,7 @@ function updateDisplay(btnTarget) {
     // 4. History is `/\d/` + `operator` and Screen is `/\d/`
     // If a digit key is pressed => Case 4
     // If a operator key is pressed => Case 3
-    else if(regOneDigitAndOperator.test(historyDisplay.textContent) && screenDisplay.textContent) {
+    else if(regMinOneDigitAndOperator.test(historyDisplay.textContent) && screenDisplay.textContent) {
         if(btnTarget.className.includes(`number`)) {
             screenDisplay.textContent += btnTarget.value;
         } else if(btnTarget.className.includes(`operator`)) {
@@ -243,26 +227,30 @@ function generateKeypad () {
     for(i = 0; i <= 21; i++) {
         btns[i] = document.createElement(`button`);
         btns[i].classList.add(`grid-item`);
-        btns[i].id = btnNames[i];
         btns[i].textContent = btnNames[i];
         btns[i].dataset.keyMatch = keyCodes[i];
+        btns[i].value = btnNames[i];
+        
+        btns[i].addEventListener(`click`,(e) => updateDisplay(e.target));
+        keypadContainer.appendChild(btns[i]);
+
         // If btnName[i] is a digit then add `number` to btns[i] classList
         if(/^\d{1}$/.test(btnNames[i])) {
             btns[i].classList.add(`number`);
         } 
+        // Else if btnNames[i] is an screen-erase method then add `erasor` to btns[i] classList
+        else if(/^Clear$/.test(btnNames[i]) || /^Delete$/.test(btnNames[i])) {
+            btns[i].classList.add(`erasor`);
+        }
         // Else if btnNames[i] is an operator then add `operator` to btns[i] classList
-        else if(!/^Clear$/.test(btnNames[i]) && !/^Delete$/.test(btnNames[i]) && !/^=$/.test(btnNames[i]) && !/^\.$/.test(btnNames[i]) && !/^\+\/-$/.test(btnNames[i]) && !/^Sqrt$/.test(btnNames[i]) && !/^%$/.test(btnNames[i])) {
+        else if(!/^=$/.test(btnNames[i]) && !/^\.$/.test(btnNames[i]) && !/^\+\/-$/.test(btnNames[i]) && !/^Sqrt$/.test(btnNames[i]) && !/^%$/.test(btnNames[i])) {
             btns[i].classList.add(`operator`);
         } 
         // Else add `special` to btns[i] classList
         else {
             btns[i].classList.add(`special`);
         }
-        btns[i].value = btnNames[i];
-        btns[i].addEventListener(`click`,(e) => updateDisplay(e.target));
-        keypadContainer.appendChild(btns[i]);
     }
-    
 }
 
 function operate(operator,str1,str2) {
@@ -271,19 +259,19 @@ function operate(operator,str1,str2) {
     let result;
     switch (operator) {
         case `+`:
-            result = add(num1,num2);
+            result = num1 + num2;
             break;
         case `-`:
-            result = subtract(num1,num2);
+            result = num1 - num2;
             break;
         case `x`:
-            result = multiply(num1,num2);
+            result = num1 * num2;
             break;
         case `/`:
-            result = divide(num1,num2);
+            result = num1 / num2;
             break;
         case `^`:
-            result = exponent(num1,num2);
+            result = num1 ** num2;
             break;
         case `Sqrt`:
             result = Math.sqrt(num1);
@@ -298,24 +286,22 @@ function operate(operator,str1,str2) {
     if(!Number.isSafeInteger(result)) {
         result = parseFloat(result.toFixed(4));
     }
-    if(result > 1e7 || result.toString().length > 8) {
+    if(result > 1e7) {
         result = result.toExponential(0);
     }
     return result;
 }
 
-function add(num1,num2) {
-    return num1 + num2;
-}
-function subtract(num1,num2) {
-    return num1 - num2;
-}
-function multiply(num1,num2) {
-    return num1 * num2;
-}
-function divide(num1,num2) {
-    return num1 / num2;
-}
-function exponent(num1,num2) {
-    return num1 ** num2;
-}
+// Generate footer
+const foot = document.querySelector('footer');
+const cpyrt = document.createElement('p')
+cpyrt.textContent = `Copyright ${new Date().getFullYear()} skothar3`;
+const gitLink = document.createElement('a')
+const gitIcon = document.createElement('i')
+gitLink.href = `https://github.com/skothar3`;
+gitLink.target = '_blank';
+gitIcon.classList.add(`fa-brands`,`fa-square-github`,`fa-lg`);
+
+foot.appendChild(cpyrt);
+foot.appendChild(gitLink)
+gitLink.appendChild(gitIcon);
