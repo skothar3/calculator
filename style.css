@@ -1,20 +1,23 @@
 * {
-    box-sizing: border-box;
-    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif    
+  box-sizing: border-box;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }
-html {
+
+  html {
     position: relative;
     height: 100vh;
     width: 100vw;
     background-color: bisque;
-}
-div#content-container {
+  }
+
+  div#content-container {
     position: absolute;
     width: 100%;
     top: 10%;
     height: 80%;
-}
-div#info {
+  }
+
+  div#info {
     position: absolute;
     left: 5%;
     top: 15%;
@@ -24,23 +27,27 @@ div#info {
     border: 3px solid gray;
     border-radius: 12px;
     box-shadow: 5px 5px 1em darkgray;
-    background-color:lightgray;
-}
-ul#shortcuts {
+    background-color: lightgray;
+  }
+
+  ul#shortcuts {
     margin-top: 2%;
-}
-ul#shortcuts > li {
+  }
+
+  ul#shortcuts > li {
     margin-top: 4%;
-}
-li > kbd {
+  }
+
+  li > kbd {
     padding: 0.3% 2.5%;
     box-shadow: 0 1px 0 1px darkgray;
     border: 2px solid gray;
     border-radius: 6px;
     color: black;
     background-color: white;
-}
-div#calculator {
+  }
+
+  div#calculator {
     position: absolute;
     left: 35%;
     width: 30%;
@@ -48,9 +55,10 @@ div#calculator {
     border: 2px solid black;
     border-radius: 12px;
     box-shadow: 5px 5px 1em black;
-    background-color:lavender;
-}
-div#display {
+    background-color: lavender;
+  }
+
+  div#display {
     position: absolute;
     top: 5%;
     left: 10%;
@@ -59,80 +67,90 @@ div#display {
     border: 2px solid black;
     border-radius: 6px;
     background-color: white;
-}
-div#history {
+  }
+
+  div#history {
     position: absolute;
     top: 2%;
     right: 2%;
     width: auto;
     height: 35%;
     font-size: x-large;
-}
-div#screen {
+  }
+
+  div#screen {
     position: absolute;
     bottom: 0%;
     right: 2%;
     width: auto;
     height: 50%;
     font-size: xxx-large;
-}
+  }
 
-div#keypad {
+  div#keypad {
     position: absolute;
     top: 30%;
     left: 10%;
     width: 80%;
     height: 65%;
     border-radius: 6px;
-
     display: grid;
-    grid-template-columns: repeat(4,1fr);
-    grid-template-rows: repeat(6,1fr);
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(6, 1fr);
     gap: 2%;
-}
-button.grid-item {
+  }
+
+  button.grid-item {
     text-align: center;
     font-size: larger;
     border: 2px solid black;
     border-radius: 8px;
     background-color: lightgray;
-}
-button.grid-item.operator,button.grid-item.special {
-    background-color: rgb(234, 157, 217);
-}
-button.grid-item:hover {
-    background-color: whitesmoke;
-    box-shadow: 0 0 0.4em #ffc600;;
-}
-button.grid-item.activated,button.grid-item:active {
-    background-color: darkgray;
-    box-shadow: 0 0 0.4em #ffc600;;
-}
-button[value="Clear"] {
-    grid-column-start: 1;
-    grid-column-end: 3;
-    background-color: rgb(247, 172, 172);
-}
+  }
 
-button[value="Delete"] {
-    grid-column-start: 3;
-    grid-column-end: 5;
-    background-color: rgb(249, 249, 178);
-}
+  button.grid-item.operator,
+  button.grid-item.special {
+    background-color: rgb(234 157 217);
+  }
 
-button.grid-item[value="="] {
-    background-color: rgb(203, 246, 203);
-}
-button.grid-item[value="="]:hover {
+  button.grid-item:hover {
     background-color: whitesmoke;
-    box-shadow: 0 0 0.4em #ffc600;;
-}
-button.grid-item[value="="].activated,button.grid-item[value="="]:active {
+    box-shadow: 0 0 0.4em #ffc600;
+  }
+
+  button.grid-item.activated,
+  button.grid-item:active {
     background-color: darkgray;
-    box-shadow: 0 0 0.4em #ffc600;;
-}
-/* Footer */
-footer {
+    box-shadow: 0 0 0.4em #ffc600;
+  }
+
+  button[value="Clear"] {
+    grid-column: 1 3;
+    background-color: rgb(247 172 172);
+  }
+
+  button[value="Delete"] {
+    grid-column: 3 5;
+    background-color: rgb(249 249 178);
+  }
+
+  button.grid-item[value="="] {
+    background-color: rgb(203 246 203);
+  }
+
+  button.grid-item[value="="]:hover {
+    background-color: whitesmoke;
+    box-shadow: 0 0 0.4em #ffc600;
+  }
+
+  button.grid-item[value="="].activated,
+  button.grid-item[value="="]:active {
+    background-color: darkgray;
+    box-shadow: 0 0 0.4em #ffc600;
+  }
+
+  /* Footer */
+  footer {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -142,13 +160,14 @@ footer {
     gap: 10px;
     font-size: large;
     color: black;
-}
-.fa-square-github {
-    color: black;
-    transition: transform 0.5s ease-in-out,  color 0.5s ease-in-out;
-}
+  }
 
-.fa-square-github:hover {
+  .fa-square-github {
+    color: black;
+    transition: transform 0.5s ease-in-out, color 0.5s ease-in-out;
+  }
+
+  .fa-square-github:hover {
     transform: rotate(1080deg) scale(1.4);
     color: #ffc600;
-}
+  }
